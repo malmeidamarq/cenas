@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Mini-challenge - Apps List</title>
+    <link data-require="bootstrap-css@2.3.2" data-semver="2.3.2" rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css" />
+    <script data-require="angular-ui-bootstrap@0.3.0" data-semver="0.3.0" src="http://angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.3.0.min.js"></script>
+    <script src="../bower_components/angular/angular.js"></script>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="../controller/indexController.js"></script>
+</head>
+<body ng-app="app">
+<div class="flex-container" ng-controller="indexCtrl">
+    <nav class="nav-categories">
+        <h2>Categories</h2>
+
+        <ul class="nav-menu" ng-repeat="cat in categories | orderBy">
+            <li><button ng-click="changeCategory(cat); select($index)" ng-class="{sel: $index == selected}">{{cat}}</button></li>
+        </ul>
+
+    </nav>
+    <loader ng-if="isLoading"></loader>
+    <section class="apps-list" ng-show="!isLoading">
+        <header>
+            <input class="search" type="text" ng-model="search" placeholder="Search by App">
+        </header>
+        <ul ng-repeat="item in filteredItems">
+            <li>
+                <div class="app-item">
+                    <div class="box-info">
+                        <div class="box-info--content">
+                            <div class="description">
+                                <h1>{{item.name}}</h1>
+                                <p>{{item.description}}</p>
+                            </div>
+                            <div class="tags">
+                                <span ng-repeat="(key, value) in item.categories" ng-if="item.categories.length === 1" >{{value}}</span>
+                                <span ng-repeat="(key, value) in item.categories" ng-if="item.categories.length !== 1 && !$last " >{{value}} /</span>
+                                <span ng-repeat="(key, value) in item.categories" ng-if="item.categories.length !== 1 && $last" >{{value}}</span>
+                            </div>
+                        </div>
+                        <div class="box-info--footer">
+                            <ul ng-repeat="sub in item.subscriptions">
+                                <li>
+                                    <span>{{sub.name}}</span><h3>{{sub.price === 0 ? 'Free' : sub.price}} <sup ng-show="sub.price">€</sup></h3>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </section>
+    <div data-pagination="" data-num-pages="numOfPages()"
+         data-current-page="curPage" data-max-size="maxSize"
+         data-boundary-links="true"></div>
+
+</div>
+</body>
+</html>
